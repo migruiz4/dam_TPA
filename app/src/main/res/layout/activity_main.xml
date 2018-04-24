@@ -6,13 +6,26 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/boton1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Button
         android:id="@+id/boton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="boton_ConsultaParadas"
         android:text="@string/boton1"
         app:layout_constraintBottom_toTopOf="@+id/boton2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -22,9 +35,11 @@
         android:id="@+id/boton2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="boton_ConsultaModo"
         android:text="@string/boton2"
         app:layout_constraintBottom_toTopOf="@+id/boton3"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/boton1">
 
@@ -34,11 +49,15 @@
         android:id="@+id/boton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="boton_ConsultaOrigDest"
         android:text="@string/boton3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/boton2">
 
     </Button>
+
+
 </android.support.constraint.ConstraintLayout>
