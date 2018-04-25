@@ -74,7 +74,7 @@ public class MainActivity extends Activity {
                     "Debe seleccionar un consorcio previamente", Toast.LENGTH_SHORT).show();
         }else{
             Log.d("Cons", Integer.toString(mySpinner.getSelectedItemPosition()));
-            Intent intent = new Intent(this, ListaActivity.class);
+            Intent intent = new Intent(this, ListaActivityMunicipiosParadas.class);
             intent.putExtra("Consorcio", mySpinner.getSelectedItemPosition());
             startActivity(intent);
         }
@@ -88,7 +88,7 @@ public class MainActivity extends Activity {
                     "Debe seleccionar un consorcio previamente", Toast.LENGTH_SHORT).show();
         }else{
             Log.d("Cons", Integer.toString(mySpinner.getSelectedItemPosition()));
-            Intent intent = new Intent(this, ListaActivity.class);
+            Intent intent = new Intent(this, ListaActivityModoCons.class);
             intent.putExtra("Consorcio", mySpinner.getSelectedItemPosition());
             startActivity(intent);
         }
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
                     "Debe seleccionar un consorcio previamente", Toast.LENGTH_SHORT).show();
         }else{
             Log.d("Cons", Integer.toString(mySpinner.getSelectedItemPosition()));
-            Intent intent = new Intent(this, ListaActivity.class);
+            Intent intent = new Intent(this, ListaActivityMunicipiosOrigen.class);
             intent.putExtra("Consorcio", mySpinner.getSelectedItemPosition());
             startActivity(intent);
         }
