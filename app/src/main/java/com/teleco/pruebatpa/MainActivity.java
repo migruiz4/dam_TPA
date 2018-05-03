@@ -28,42 +28,51 @@ import java.util.ArrayList;
 public class MainActivity extends Activity {
     private MiBaseDatos MDB;
     private Spinner mySpinner;
+    ArrayList<String> arrayListConsorcios;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.cargando);
+        setContentView(R.layout.activity_main);
+
+        mySpinner = (Spinner) findViewById(R.id.spinner);
+        arrayListConsorcios = new ArrayList<String>();
+        arrayListConsorcios.add("Seleccione un Consorcio");
+
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,arrayListConsorcios);
+        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        mySpinner.setAdapter(myAdapter);
+
         MDB = new MiBaseDatos(getApplicationContext());
 
         MDB.creaBBDD();
-        if(MDB.isEmpty()){
+        if(MDB.isUpdated()){
+            final ProgressDialog ringProgressDialog = ProgressDialog.show(this, "Descargando datos", "Por favor espere...", true);
+            //you usually don't want the user to stop the current process, and this will make sure of that
+            ringProgressDialog.setCancelable(false);
+
             Thread t= new Thread() {
                 public void run()    {
                     MDB.rellenar();
                     Log.d("BBDD","Base de datos rellena");
+                    ringProgressDialog.cancel();
                     tablaRellena();
                 }
             };
             t.start();
         }
-        else
+        else{
             tablaRellena();
+        }
     }
 
     public void tablaRellena()
     {
-        setContentView(R.layout.activity_main);
-        mySpinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayList<Consorcio> lista_consorcios = MDB.getConsorcios();
-        ArrayList<String> arrayListConsorcios = new ArrayList<String>();
-        arrayListConsorcios.add("Seleccione un Consorcio");
         for(Consorcio cons : lista_consorcios)
             arrayListConsorcios.add(cons.getNombre());
-
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,arrayListConsorcios);
-        myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        mySpinner.setAdapter(myAdapter);
-
         mySpinner.getSelectedItemPosition();
     }
 

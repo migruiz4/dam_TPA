@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.Semaphore;
 
 
@@ -99,11 +100,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
             + PARADA_TABLE + " ("
             + PARADA_ID + " integer not null, "
             + MUNICIPIO_ID + " integer not null, "
+            + NUCLEO_ID + " integer not null, "
             + CONSORCIOS_ID + " integer not null, "
             + PARADA_NOMBRE + " text not null, "
             + PARADA_LAT + " float not null, "
             + PARADA_LONG + " float not null, "
-            + " PRIMARY KEY(" + PARADA_ID + ", " + CONSORCIOS_ID +", "+ MUNICIPIO_ID+ ")," +
+            + " PRIMARY KEY(" + PARADA_ID + ", " + CONSORCIOS_ID +", "+ MUNICIPIO_ID+", " + NUCLEO_ID + ")," +
+            "  FOREIGN KEY("+ NUCLEO_ID +") REFERENCES "+ NUCLEO_TABLE + "(" + NUCLEO_ID +") ON DELETE NO ACTION ON UPDATE NO ACTION,"+
             "  FOREIGN KEY("+ MUNICIPIO_ID +", "+ CONSORCIOS_ID+") REFERENCES "+ MUNICIPIO_TABLE + "(" + MUNICIPIO_ID +", "+ CONSORCIOS_ID + ") ON DELETE NO ACTION ON UPDATE NO ACTION);";
 
     private static final String LINEA_TABLE = "Linea";
@@ -123,6 +126,17 @@ public class MiBaseDatos extends SQLiteOpenHelper {
             + " PRIMARY KEY(" + LINEA_ID + ", " + CONSORCIOS_ID +", "+ MODO_ID+ ")," +
             "  FOREIGN KEY("+ MODO_ID +", "+ CONSORCIOS_ID+") REFERENCES "+ MODO_TABLE + "(" + MODO_ID +", "+ CONSORCIOS_ID + ") ON DELETE NO ACTION ON UPDATE NO ACTION);";
 
+    //tabla que guarda la fecha en la que la bbdd fue actualizada, para al principio de cada ejecución ejecute isUpdated() en sustitución de isEmpty()
+    private static final String ACT_TABLE = "tablaAct";
+    private static final String ACT_ID = "idAct";
+    private static final String ACT_FECHA = "fechaAct";
+
+    private static final String ACT_TABLE_CREATE = "create table if not exists "
+     + ACT_TABLE + " ("
+     + ACT_ID + " integer primary key autoincrement, "
+     + ACT_FECHA + " int not null);";
+
+
     public MiBaseDatos(Context context) {
         super(context, NOMBRE_BASEDATOS, null, VERSION_BASEDATOS);
     }
@@ -137,7 +151,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         db.execSQL(MODO_TABLE_CREATE);
         db.execSQL(FRECUENCIA_TABLE_CREATE);
         db.execSQL(LINEA_TABLE_CREATE);
-
+        db.execSQL(ACT_TABLE_CREATE);
         Log.d("BBDD","Tablas creadas");
     }
 
@@ -151,6 +165,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         db.execSQL(MODO_TABLE_CREATE);
         db.execSQL(FRECUENCIA_TABLE_CREATE);
         db.execSQL(LINEA_TABLE_CREATE);
+        db.execSQL(ACT_TABLE_CREATE);
 
         db.close();
         Log.d("BBDD","Tablas creadas");
@@ -166,13 +181,19 @@ public class MiBaseDatos extends SQLiteOpenHelper {
             return false;
         }
     }
-    public boolean isEmpty(){
+
+    //La función isUpdated() comprueba si la tabla está rellena correctamente o no comprobando si hay entradas en la tabla de actualizaciones
+    //Podría sustituirse por isUpdated, para comprobar la diferencia entre la fecha de última actualización y la actual
+    // y borrara la base de datos en caso de que necesitase actualización
+    public boolean isUpdated(){
         boolean empty;
         SQLiteDatabase db = getReadableDatabase();
-        String[] valores_recuperar = {CONSORCIOS_ID, CONSORCIOS_NOMBRE, CONSORCIOS_NOMBRECORTO};
-        Cursor c = db.query(CONSORCIOS_TABLE, valores_recuperar, null , null, null, null, null, null);
-        Log.d("BBDD", "Numero de filas en Tabla Consorcios ="+ c.getCount());
+        String[] valores_recuperar = {ACT_ID, ACT_FECHA};
+        Cursor c = db.query(ACT_TABLE, valores_recuperar, null , null, null, null, null, null);
+        Log.d("BBDD", "Numero de filas en Tabla Actualizaciones ="+ c.getCount());
         if(c.getCount() == 0) {
+            borrarBBDD();
+            creaBBDD();
             empty = true;
         }else{
             empty = false;
@@ -205,6 +226,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         do {
             try{
             Integer num_Consorcio = c.getInt(0);
+            Log.d("BBDD", "Rellenando consorcio " + num_Consorcio.toString());
             Thread a= new Thread() {
                     public void run()    {
                         rellenar_municipios(c.getInt(0), sem);
@@ -257,6 +279,15 @@ public class MiBaseDatos extends SQLiteOpenHelper {
             error = true;
         db.close();
         c.close();
+
+        SQLiteDatabase db2 = getReadableDatabase();
+        ContentValues valores = new ContentValues();
+        Date fecha = new Date();
+        valores.put(ACT_FECHA, fecha.getTime());
+        db2.insert(ACT_TABLE, null, valores);
+        db2.close();
+
+
         Log.d("BBDD", "¿Hay error?: " + error);
         return error;
     }
@@ -268,7 +299,6 @@ public class MiBaseDatos extends SQLiteOpenHelper {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    Log.d("BBDD", response.toString());
                     JSONArray array = response.getJSONArray("consorcios");
                     JSONObject cons= null;
                     SQLiteDatabase db = getWritableDatabase();
@@ -337,7 +367,6 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                                     valores.put(CONSORCIOS_ID, idConsorcio);
                                     valores.put(MUNICIPIO_DATOS, datos);
                                     db.insert(MUNICIPIO_TABLE, null, valores);
-                                    Log.d("Mun",valores.toString());
                                 }
                             }
                             sem.release();
@@ -380,7 +409,6 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                             for (int i = 0; i < array.length(); i++) {
 
                                 nuc = array.getJSONObject(i);
-                                Log.d("ultimo", nuc.getString("idNucleo"));
                                 int id_nucleo = nuc.getInt("idNucleo");
                                 if(nuc.getString("idMunicipio") == "null")
                                    id_mun = 0;
@@ -394,7 +422,6 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                                     valores.put(CONSORCIOS_ID, idConsorcio);
                                     valores.put(NUCLEO_NOMBRE, nombre);
                                     db.insert(NUCLEO_TABLE, null, valores);
-                                    Log.d("Nuc", valores.toString());
                                 }
                             }
                             sem.release();
@@ -441,6 +468,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                                 par = array.getJSONObject(i);
                                 int id_par = par.getInt("idParada");
                                 int id_mun = par.getInt("idMunicipio");
+                                int id_nuc = par.getInt("idNucleo");
                                 String nombre = par.getString("nombre");
                                 if(isDouble(par.getString("latitud"))) {
                                     latitud = par.getDouble("latitud");
@@ -465,8 +493,8 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                                     valores.put(PARADA_NOMBRE, nombre);
                                     valores.put(PARADA_LAT, latitud);
                                     valores.put(PARADA_LONG, longitud);
+                                    valores.put(NUCLEO_ID, id_nuc);
                                     db.insert(PARADA_TABLE, null, valores);
-                                    Log.d("parada", valores.toString());
                                 }
                             }
                             sem.release();
@@ -648,7 +676,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         PruebaTPAApplication.getInstance().getRequestQueue().add(request);
     }
 
-    public void  borrarBBDD() {
+    private void  borrarBBDD() {
         SQLiteDatabase db = getWritableDatabase();
 
         db.execSQL("DROP TABLE IF EXISTS " +LINEA_TABLE);
@@ -661,6 +689,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
 
         db.close();
     }
+        public void borradoTotal() {
+            SQLiteDatabase db = getWritableDatabase();
+            db.execSQL("DROP TABLE IF EXISTS " +ACT_TABLE);
+            db.close();
+
+            borrarBBDD();
+        }
 
     public ArrayList<Consorcio> getConsorcios() {
         SQLiteDatabase db = getReadableDatabase();
@@ -676,12 +711,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         c.close();
         return lista_consorcios;
     }
+
     public ArrayList<Municipio> getMunicipiosByConsorcio(Integer idConsorcio){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Municipio> lista_mun = new ArrayList<Municipio>();
         String[] valores_recuperar = {MUNICIPIO_ID, MUNICIPIO_DATOS};
         String[] valores_where = {idConsorcio.toString()};
-        Cursor c = db.query(MUNICIPIO_TABLE, valores_recuperar, CONSORCIOS_ID +"=?", valores_where, null, null, MODO_ID, null);
+        Cursor c = db.query(MUNICIPIO_TABLE, valores_recuperar, CONSORCIOS_ID +"=?", valores_where, null, null, MUNICIPIO_ID, null);
         c.moveToFirst();
         do {
             Municipio mun = new Municipio(c.getInt(0), idConsorcio, c.getString(1));
@@ -691,6 +727,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         c.close();
         return lista_mun;
     }
+
     public ArrayList<Parada> getParadasByMunicipio(Integer idConsorcio, Integer idMunicipio){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Parada> lista_paradas = new ArrayList<Parada>();
@@ -706,6 +743,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         c.close();
         return lista_paradas;
     }
+
     public ArrayList<ModoTrans> getModosTransporte(Integer idConsorcio) {
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<ModoTrans> lista_modos = new ArrayList<ModoTrans>();
@@ -737,6 +775,23 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         c.close();
         return lista_lineas;
     }
+
+    public ArrayList<Nucleo> getNucleosByMunicipio(Integer idConsorcio, Integer idMunicipio){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Nucleo> lista_nucleos = new ArrayList<Nucleo>();
+        String[] valores_recuperar = {NUCLEO_ID, NUCLEO_NOMBRE};
+        String[] valores_where = {idConsorcio.toString(), idMunicipio.toString()};
+        Cursor c = db.query(NUCLEO_TABLE, valores_recuperar, CONSORCIOS_ID+"=? and "+MUNICIPIO_ID+"=?", valores_where, null, null, null, null);
+        c.moveToFirst();
+        do {
+            Nucleo nucleo = new Nucleo(c.getInt(0), idMunicipio, idConsorcio, c.getString(1));
+            lista_nucleos.add(nucleo);
+        } while (c.moveToNext());
+        db.close();
+        c.close();
+        return lista_nucleos;
+    }
+
 
     public ArrayList<Linea> getLineasByCodigo(Integer idConsorcio, String codigo){
         SQLiteDatabase db = getReadableDatabase();

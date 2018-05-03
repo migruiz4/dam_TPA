@@ -9,21 +9,22 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ListaActivityMunicipiosOrigen extends Activity {
+public class ListaActivityParadas extends Activity {
     private ListView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
+    private Integer idMunicipio;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
         Intent esteIntent = getIntent();
-        idConsorcio = esteIntent.getIntExtra("Consorcio", 0);
-        if(idConsorcio != 0) {
+        idConsorcio = esteIntent.getIntExtra("idConsorcio", 0);
+        idMunicipio = esteIntent.getIntExtra("idMunicipio", 0);
+        if(idConsorcio != 0 && idMunicipio != 0) {
             MDB = new MiBaseDatos(getApplicationContext());
             ArrayList<Municipio> lista_municipios = MDB.getMunicipiosByConsorcio(idConsorcio);
             lista = (ListView) findViewById(R.id.lista);
@@ -57,11 +58,10 @@ public class ListaActivityMunicipiosOrigen extends Activity {
     }
 
     public void pasar_siguiente_actividad(Integer idMunicipio){
-        Intent intent = new Intent(this, ListaActivityLineasMunicipio.class);
+        Intent intent = new Intent(this, ListActivity.class);
         //finish();  //Descomentar para destruir esta actividad antes de comenzar la siguiente
         intent.putExtra("idMunicipio", idMunicipio);
         intent.putExtra("idConsorcio", idConsorcio);
         startActivity(intent);
     }
 }
-
