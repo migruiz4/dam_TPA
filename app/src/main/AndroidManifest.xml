@@ -13,6 +13,9 @@
         <activity android:name=".ListaActivityModoCons"/>
         <activity android:name=".ListaActivityMunicipiosParadas"/>
         <activity android:name=".ListaActivityMunicipiosOrigen"/>
+        <activity android:name=".ListaActivityLineasModo"/>
+        <activity android:name=".ListaActivityLineasMunicipio"/>
+        <activity android:name=".ListaActivityParadas"/>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

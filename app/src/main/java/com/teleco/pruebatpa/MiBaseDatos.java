@@ -792,6 +792,21 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         return lista_nucleos;
     }
 
+    public ArrayList<Linea> getLineasByModo(Integer idConsorcio, Integer idModo){
+        SQLiteDatabase db = getReadableDatabase();
+        ArrayList<Linea> lista_lineas = new ArrayList<Linea>();
+        String[] valores_recuperar = {LINEA_ID, LINEA_CODIGO, LINEA_NOMBRE, LINEA_OPERA};
+        String[] valores_where = {idConsorcio.toString(), idModo.toString()};
+        Cursor c = db.query(LINEA_TABLE, valores_recuperar, CONSORCIOS_ID+"=? and "+MODO_ID+"=?", valores_where, null, null, null, null);
+        c.moveToFirst();
+        do {
+            Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1),c.getString(2), c.getString(3));
+            lista_lineas.add(linea);
+        } while (c.moveToNext());
+        db.close();
+        c.close();
+        return lista_lineas;
+    }
 
     public ArrayList<Linea> getLineasByCodigo(Integer idConsorcio, String codigo){
         SQLiteDatabase db = getReadableDatabase();
