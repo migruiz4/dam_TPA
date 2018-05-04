@@ -57,7 +57,7 @@ public class ListaActivityMunicipiosParadas extends Activity {
     }
 
     public void pasar_siguiente_actividad(Integer idMunicipio){
-        Intent intent = new Intent(this, ListActivity.class);
+        Intent intent = new Intent(this, ListaActivityParadas.class);
         //finish();  //Descomentar para destruir esta actividad antes de comenzar la siguiente
         intent.putExtra("idMunicipio", idMunicipio);
         intent.putExtra("idConsorcio", idConsorcio);

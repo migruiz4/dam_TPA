@@ -702,11 +702,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         ArrayList<Consorcio> lista_consorcios = new ArrayList<Consorcio>();
         String[] valores_recuperar = {CONSORCIOS_ID, CONSORCIOS_NOMBRE, CONSORCIOS_NOMBRECORTO};
         Cursor c = db.query(CONSORCIOS_TABLE, valores_recuperar, null, null, null, null, null, null);
-        c.moveToFirst();
-        do {
-            Consorcio cons = new Consorcio(c.getInt(0), c.getString(1), c.getString(2));
-            lista_consorcios.add(cons);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Consorcio cons = new Consorcio(c.getInt(0), c.getString(1), c.getString(2));
+                lista_consorcios.add(cons);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_consorcios;
@@ -718,11 +720,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {MUNICIPIO_ID, MUNICIPIO_DATOS};
         String[] valores_where = {idConsorcio.toString()};
         Cursor c = db.query(MUNICIPIO_TABLE, valores_recuperar, CONSORCIOS_ID +"=?", valores_where, null, null, MUNICIPIO_ID, null);
-        c.moveToFirst();
-        do {
-            Municipio mun = new Municipio(c.getInt(0), idConsorcio, c.getString(1));
-            lista_mun.add(mun);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Municipio mun = new Municipio(c.getInt(0), idConsorcio, c.getString(1));
+                lista_mun.add(mun);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_mun;
@@ -731,14 +735,16 @@ public class MiBaseDatos extends SQLiteOpenHelper {
     public ArrayList<Parada> getParadasByMunicipio(Integer idConsorcio, Integer idMunicipio){
         SQLiteDatabase db = getReadableDatabase();
         ArrayList<Parada> lista_paradas = new ArrayList<Parada>();
-        String[] valores_recuperar = {PARADA_ID, PARADA_NOMBRE, PARADA_LAT, PARADA_LONG};
+        String[] valores_recuperar = {PARADA_ID, NUCLEO_ID, PARADA_NOMBRE, PARADA_LAT, PARADA_LONG};
         String[] valores_where = {idConsorcio.toString(), idMunicipio.toString()};
-        Cursor c = db.query(PARADA_TABLE, valores_recuperar, CONSORCIOS_ID +"=? AND "+ MUNICIPIO_ID+"=?", valores_where, null, null, MODO_ID, null);
-        c.moveToFirst();
-        do {
-            Parada parada = new Parada(c.getInt(0),idMunicipio, idConsorcio, c.getString(1), c.getDouble(2), c.getDouble(3));
-            lista_paradas.add(parada);
-        } while (c.moveToNext());
+        Cursor c = db.query(PARADA_TABLE, valores_recuperar, CONSORCIOS_ID +"=? AND "+ MUNICIPIO_ID+"=?", valores_where, null, null, null, null);
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Parada parada = new Parada(c.getInt(0),idMunicipio, c.getInt(1), idConsorcio, c.getString(2), c.getDouble(3), c.getDouble(4));
+                lista_paradas.add(parada);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_paradas;
@@ -750,11 +756,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {MODO_ID, MODO_DESC};
         String[] valores_where = {idConsorcio.toString()};
         Cursor c = db.query(MODO_TABLE, valores_recuperar, CONSORCIOS_ID +"=?", valores_where, null, null, MODO_ID, null);
-        c.moveToFirst();
-        do {
-            ModoTrans modo = new ModoTrans(c.getInt(0), idConsorcio, c.getString(1));
-            lista_modos.add(modo);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                ModoTrans modo = new ModoTrans(c.getInt(0), idConsorcio, c.getString(1));
+                lista_modos.add(modo);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_modos;
@@ -766,11 +774,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {LINEA_ID, LINEA_CODIGO, LINEA_NOMBRE, LINEA_OPERA};
         String[] valores_where = {idConsorcio.toString()};
         Cursor c = db.query(LINEA_TABLE, valores_recuperar, CONSORCIOS_ID +"=?", valores_where, null, null, MODO_ID, null);
-        c.moveToFirst();
-        do {
-            Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1),c.getString(2), c.getString(3));
-            lista_lineas.add(linea);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1), c.getString(2), c.getString(3));
+                lista_lineas.add(linea);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_lineas;
@@ -782,11 +792,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {NUCLEO_ID, NUCLEO_NOMBRE};
         String[] valores_where = {idConsorcio.toString(), idMunicipio.toString()};
         Cursor c = db.query(NUCLEO_TABLE, valores_recuperar, CONSORCIOS_ID+"=? and "+MUNICIPIO_ID+"=?", valores_where, null, null, null, null);
-        c.moveToFirst();
-        do {
-            Nucleo nucleo = new Nucleo(c.getInt(0), idMunicipio, idConsorcio, c.getString(1));
-            lista_nucleos.add(nucleo);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Nucleo nucleo = new Nucleo(c.getInt(0), idMunicipio, idConsorcio, c.getString(1));
+                lista_nucleos.add(nucleo);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_nucleos;
@@ -798,11 +810,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {LINEA_ID, LINEA_CODIGO, LINEA_NOMBRE, LINEA_OPERA};
         String[] valores_where = {idConsorcio.toString(), idModo.toString()};
         Cursor c = db.query(LINEA_TABLE, valores_recuperar, CONSORCIOS_ID+"=? and "+MODO_ID+"=?", valores_where, null, null, null, null);
-        c.moveToFirst();
-        do {
-            Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1),c.getString(2), c.getString(3));
-            lista_lineas.add(linea);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1), c.getString(2), c.getString(3));
+                lista_lineas.add(linea);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_lineas;
@@ -814,11 +828,13 @@ public class MiBaseDatos extends SQLiteOpenHelper {
         String[] valores_recuperar = {LINEA_ID, LINEA_CODIGO, LINEA_NOMBRE, LINEA_OPERA};
         String[] valores_where = {idConsorcio.toString(), codigo};
         Cursor c = db.query(LINEA_TABLE, valores_recuperar, CONSORCIOS_ID+"=? and "+LINEA_CODIGO+"=?", valores_where, null, null, MODO_ID, null);
-        c.moveToFirst();
-        do {
-            Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1),c.getString(2), c.getString(3));
-            lista_lineas.add(linea);
-        } while (c.moveToNext());
+        if(c.getCount() != 0) {
+            c.moveToFirst();
+            do {
+                Linea linea = new Linea(c.getInt(0), idConsorcio, c.getString(1), c.getString(2), c.getString(3));
+                lista_lineas.add(linea);
+            } while (c.moveToNext());
+        }
         db.close();
         c.close();
         return lista_lineas;
