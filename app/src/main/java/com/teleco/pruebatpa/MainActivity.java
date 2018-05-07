@@ -47,7 +47,7 @@ public class MainActivity extends Activity {
         MDB = new MiBaseDatos(getApplicationContext());
 
         MDB.creaBBDD();
-        if(MDB.isUpdated()){
+        if(MDB.needUpdate()){
             final ProgressDialog ringProgressDialog = ProgressDialog.show(this, "Descargando datos", "Por favor espere...", true);
             //you usually don't want the user to stop the current process, and this will make sure of that
             ringProgressDialog.setCancelable(false);

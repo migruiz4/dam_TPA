@@ -185,7 +185,7 @@ public class MiBaseDatos extends SQLiteOpenHelper {
     //La función isUpdated() comprueba si la tabla está rellena correctamente o no comprobando si hay entradas en la tabla de actualizaciones
     //Podría sustituirse por isUpdated, para comprobar la diferencia entre la fecha de última actualización y la actual
     // y borrara la base de datos en caso de que necesitase actualización
-    public boolean isUpdated(){
+    public boolean needUpdate(){
         boolean empty;
         SQLiteDatabase db = getReadableDatabase();
         String[] valores_recuperar = {ACT_ID, ACT_FECHA};
