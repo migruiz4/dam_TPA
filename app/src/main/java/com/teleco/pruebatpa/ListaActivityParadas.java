@@ -23,7 +23,7 @@ public class ListaActivityParadas extends Activity implements DatePickerDialog.O
     private Integer idConsorcio;
     private Integer idMunicipio;
     private Integer idPar;
-    private LinearLayoutManager mLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -44,6 +44,9 @@ public class ListaActivityParadas extends Activity implements DatePickerDialog.O
             MDB = new MiBaseDatos(getApplicationContext());
             ArrayList<Parada> lista_paradas = MDB.getParadasByMunicipio(idConsorcio, idMunicipio);
             lista = (RecyclerView) findViewById(R.id.lista);
+            lista.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            lista.setLayoutManager(mLayoutManager);
             lista.setAdapter(new AdaptadorRecycler(lista_paradas, R.layout.parada, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
@@ -51,6 +54,7 @@ public class ListaActivityParadas extends Activity implements DatePickerDialog.O
                     datePickerDialog.show();
                 }
             }));
+
         }
         else
             Log.e("Lista", "consorcio no recibido");

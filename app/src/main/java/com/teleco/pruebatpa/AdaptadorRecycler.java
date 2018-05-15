@@ -143,6 +143,7 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             });
         }
     }
+
     public static class ViewHolder3 extends RecyclerView.ViewHolder {
 
         public TextView texto_ID;
