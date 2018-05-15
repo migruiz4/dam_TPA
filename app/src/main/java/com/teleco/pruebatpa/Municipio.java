@@ -22,4 +22,7 @@ public class Municipio {
     public String getDatos() {
         return datos;
     }
+
+    @Override
+    public String toString() { return datos; }
 }

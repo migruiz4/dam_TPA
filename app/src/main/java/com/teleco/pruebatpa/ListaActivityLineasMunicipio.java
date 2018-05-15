@@ -6,6 +6,8 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,11 +27,12 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class ListaActivityLineasMunicipio extends Activity{
-    private ListView lista;
+    private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
     private Integer idMunicipio;
     private ArrayList<Linea> lista_lineas;
+    private LinearLayoutManager mLayoutManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,31 +65,18 @@ public class ListaActivityLineasMunicipio extends Activity{
 
     public void respuesta_rest(){
 
-        lista = (ListView) findViewById(R.id.lista);
-        lista.setAdapter(new AdaptadorLista(this, R.layout.municipio, lista_lineas) {
+        lista = (RecyclerView) findViewById(R.id.lista);
+        lista.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        lista.setLayoutManager(mLayoutManager);
+        lista.setAdapter(new AdaptadorRecycler(lista_lineas, R.layout.municipio, new OnItemClickListener() {
             @Override
-            public void onEntrada(Object entrada, View view) {
-                if (entrada != null) {
-                    TextView texto_municipio = (TextView) view.findViewById(R.id.id_municipio_nom);
-                    if (texto_municipio != null)
-                        texto_municipio.setText(((Municipio)entrada).getDatos());
-
-                    TextView texto_ID = (TextView) view.findViewById(R.id.municipio_ID);
-                    if (texto_ID != null)
-                        texto_ID.setText(Integer.toString(((Municipio) entrada).getIdMunicipio()));
-
-                }
-            }
-        });
-        lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                TextView textoID = (TextView) view.findViewById(R.id.municipio_ID);
-                Integer idMun = Integer.parseInt(textoID.getText().toString());
+            public void onItemClick(Object item) {
+                Integer idMun = ((Municipio) item).getIdMunicipio();
                 pasar_siguiente_actividad(idMun);
             }
-        });
+        }));
+
     }
 
     public void pideLineas(String idNucleo){

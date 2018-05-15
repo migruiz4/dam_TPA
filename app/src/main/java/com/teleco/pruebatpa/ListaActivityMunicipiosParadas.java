@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,11 +14,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ListaActivityMunicipiosParadas extends Activity {
-    private ListView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
+
+    ArrayList<Municipio> lista_municipios;
+    RecyclerView lista;
+    RecyclerView.LayoutManager mLayoutManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,32 +32,20 @@ public class ListaActivityMunicipiosParadas extends Activity {
         idConsorcio = esteIntent.getIntExtra("Consorcio", 0);
         if(idConsorcio != 0) {
             MDB = new MiBaseDatos(getApplicationContext());
-            ArrayList<Municipio> lista_municipios = MDB.getMunicipiosByConsorcio(idConsorcio);
-            lista = (ListView) findViewById(R.id.lista);
-            lista.setAdapter(new AdaptadorLista(this, R.layout.municipio, lista_municipios) {
-                @Override
-                public void onEntrada(Object entrada, View view) {
-                    if (entrada != null) {
-                        TextView texto_municipio = (TextView) view.findViewById(R.id.id_municipio_nom);
-                        if (texto_municipio != null)
-                            texto_municipio.setText(((Municipio)entrada).getDatos());
+            lista_municipios = MDB.getMunicipiosByConsorcio(idConsorcio);
 
-                        TextView texto_ID = (TextView) view.findViewById(R.id.municipio_ID);
-                        if (texto_ID != null)
-                            texto_ID.setText(Integer.toString(((Municipio) entrada).getIdMunicipio()));
-
-                    }
-                }
-            });
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            lista = (RecyclerView) findViewById(R.id.lista);
+            lista.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            lista.setLayoutManager(mLayoutManager);
+            lista.setAdapter(new AdaptadorRecycler(lista_municipios, R.layout.municipio, new OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position,
-                                        long id) {
-                    TextView textoID = (TextView) view.findViewById(R.id.municipio_ID);
-                    Integer idMun = Integer.parseInt(textoID.getText().toString());
+                public void onItemClick(Object item) {
+                    Integer idMun = ((Municipio)item).getIdMunicipio();
                     pasar_siguiente_actividad(idMun);
                 }
-            });
+            }));
+
         }
         else
             Log.e("Lista", "consorcio no recibido");

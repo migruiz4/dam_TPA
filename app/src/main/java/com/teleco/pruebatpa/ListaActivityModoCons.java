@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,9 +16,10 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class ListaActivityModoCons extends Activity {
-    private ListView lista;
+    private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
+    private LinearLayoutManager mLayoutManager;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,31 +29,17 @@ public class ListaActivityModoCons extends Activity {
         if(idConsorcio != 0) {
             MDB = new MiBaseDatos(getApplicationContext());
             ArrayList<ModoTrans> lista_modos = MDB.getModosTransporte(idConsorcio);
-            lista = (ListView) findViewById(R.id.lista);
-            lista.setAdapter(new AdaptadorLista(this, R.layout.modo, lista_modos) {
+            lista = (RecyclerView) findViewById(R.id.lista);
+            lista.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            lista.setLayoutManager(mLayoutManager);
+            lista.setAdapter(new AdaptadorRecycler(lista_modos, R.layout.modo, new OnItemClickListener() {
                 @Override
-                public void onEntrada(Object entrada, View view) {
-                    if (entrada != null) {
-                        TextView texto_modo = (TextView) view.findViewById(R.id.id_modo_desc);
-                        if (texto_modo != null)
-                            texto_modo.setText(((ModoTrans)entrada).getDesc());
-
-                        TextView texto_ID = (TextView) view.findViewById(R.id.modo_ID);
-                        if (texto_ID != null)
-                            texto_ID.setText(Integer.toString(((ModoTrans) entrada).getIdModo()));
-
-                    }
-                }
-            });
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position,
-                                        long id) {
-                    TextView textoID = (TextView) view.findViewById(R.id.modo_ID);
-                    Integer modo = Integer.parseInt(textoID.getText().toString());
+                public void onItemClick(Object item) {
+                    Integer modo = ((ModoTrans) item).getIdModo();
                     pasar_siguiente_actividad(modo);
                 }
-            });
+            }));
         }
         else
             Log.e("Lista", "consorcio no recibido");

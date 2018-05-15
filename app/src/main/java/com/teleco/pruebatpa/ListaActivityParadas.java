@@ -5,6 +5,8 @@ import android.app.DatePickerDialog;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,11 +18,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 public class ListaActivityParadas extends Activity implements DatePickerDialog.OnDateSetListener {
-    private ListView lista;
+    private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
     private Integer idMunicipio;
     private Integer idPar;
+    private LinearLayoutManager mLayoutManager;
+
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         pasar_siguiente_actividad(idPar, year, month, dayOfMonth);
@@ -39,31 +43,14 @@ public class ListaActivityParadas extends Activity implements DatePickerDialog.O
         if(idConsorcio != 0 && idMunicipio != 0) {
             MDB = new MiBaseDatos(getApplicationContext());
             ArrayList<Parada> lista_paradas = MDB.getParadasByMunicipio(idConsorcio, idMunicipio);
-            lista = (ListView) findViewById(R.id.lista);
-            lista.setAdapter(new AdaptadorLista(this, R.layout.parada, lista_paradas) {
+            lista = (RecyclerView) findViewById(R.id.lista);
+            lista.setAdapter(new AdaptadorRecycler(lista_paradas, R.layout.parada, new OnItemClickListener() {
                 @Override
-                public void onEntrada(Object entrada, View view) {
-                    if (entrada != null) {
-                        TextView texto_parada = (TextView) view.findViewById(R.id.id_parada_nom);
-                        if (texto_parada != null)
-                            texto_parada.setText(((Parada)entrada).getNombre());
-
-                        TextView texto_ID = (TextView) view.findViewById(R.id.parada_ID);
-                        if (texto_ID != null)
-                            texto_ID.setText(Integer.toString(((Parada) entrada).getIdParada()));
-
-                    }
-                }
-            });
-            lista.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position,
-                                        long id) {
-                    TextView textoID = (TextView) view.findViewById(R.id.parada_ID);
-                    idPar = Integer.parseInt(textoID.getText().toString());
+                public void onItemClick(Object item) {
+                    idPar = ((Parada)item).getIdParada();
                     datePickerDialog.show();
                 }
-            });
+            }));
         }
         else
             Log.e("Lista", "consorcio no recibido");
