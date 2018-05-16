@@ -5,12 +5,15 @@ import android.app.Application;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.app.ProgressDialog;
+import android.widget.Toolbar;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyLog;
@@ -34,12 +37,14 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Toolbar barra_menu = (Toolbar) findViewById(R.id.my_toolbar);
+        setActionBar(barra_menu);
 
         mySpinner = (Spinner) findViewById(R.id.spinner);
         arrayListConsorcios = new ArrayList<String>();
         arrayListConsorcios.add("Seleccione un Consorcio");
 
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (this,android.R.layout.simple_spinner_dropdown_item,arrayListConsorcios);
+        ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (this,R.layout.spinner,arrayListConsorcios);
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         mySpinner.setAdapter(myAdapter);
@@ -65,6 +70,23 @@ public class MainActivity extends Activity {
         else{
             tablaRellena();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_principal_desplegable, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public void tablaRellena()
