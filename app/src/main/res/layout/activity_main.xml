@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -32,49 +33,111 @@
 
     </android.support.design.widget.AppBarLayout>
 
-
-    <Button
-        android:id="@+id/boton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="340dp"
+        android:layout_height="72dp"
         android:onClick="boton_ConsultaParadas"
-        android:text="@string/boton1"
-        app:layout_constraintBottom_toTopOf="@+id/boton2"
+        app:layout_constraintBottom_toTopOf="@+id/card_view2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+        app:layout_constraintVertical_bias="0.2">
 
-    </Button>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="133dp"
+            android:padding="16dp">
 
-    <Button
-        android:id="@+id/boton2"
-        android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/foto_boton1"
+                android:layout_width="44dp"
+                android:layout_height="43dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp" />
+
+            <TextView
+                android:id="@+id/boton_consultar_parada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/foto_boton1"
+                android:text="@string/boton1"
+                android:textSize="30sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view2"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:onClick="boton_ConsultaModo"
-        android:text="@string/boton2"
-        app:layout_constraintBottom_toTopOf="@+id/boton3"
+        app:layout_constraintBottom_toTopOf="@+id/card_view3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/boton1">
+        app:layout_constraintStart_toStartOf="parent">
 
-    </Button>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="133dp"
+            android:padding="16dp">
 
-    <Button
-        android:id="@+id/boton3"
-        android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/foto_boton2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp" />
+
+            <TextView
+                android:id="@+id/boton_consultar_modo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/foto_boton2"
+                android:text="@string/boton2"
+                android:textSize="30sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view3"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:onClick="boton_ConsultaOrigDest"
-        android:text="@string/boton3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/boton2">
+        app:layout_constraintStart_toStartOf="parent">
 
-    </Button>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="133dp"
+            android:padding="16dp">
 
+            <ImageView
+                android:id="@+id/foto_boton3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp" />
 
+            <TextView
+                android:id="@+id/boton_consultar_origen_destino"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/foto_boton3"
+                android:text="@string/boton3"
+                android:textSize="30sp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </android.support.constraint.ConstraintLayout>
