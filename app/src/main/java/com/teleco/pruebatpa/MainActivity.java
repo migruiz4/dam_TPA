@@ -44,9 +44,6 @@ public class MainActivity extends Activity {
         arrayListConsorcios = new ArrayList<String>();
         arrayListConsorcios.add("Seleccione un Consorcio");
 
-        ImageView img= (ImageView) findViewById(R.id.foto_boton1);
-        img.setImageResource(R.drawable.my_image);
-
         ArrayAdapter<String> myAdapter = new ArrayAdapter<String> (this,R.layout.spinner,arrayListConsorcios);
         myAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
