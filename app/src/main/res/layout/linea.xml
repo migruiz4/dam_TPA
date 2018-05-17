@@ -2,73 +2,64 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="80dp"
-    android:orientation="horizontal" >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="80dp"
-        android:layout_height="match_parent">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_linea"
+        android:layout_width="340dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="5dp">
 
-        <TextView
-            android:id="@+id/codigo_linea"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|right"
-            android:text="666"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:gravity="center">
+            <TextView
+                android:id="@+id/codigo_linea"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:text="666" />
 
-        <TextView
-            android:id="@+id/id_linea_nom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:text="@string/parada_nom"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.32" />
+            <TextView
+                android:id="@+id/id_linea_nom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/codigo_linea"
+                android:layout_marginLeft="8dp"
+                android:text="@string/municipio_nom"
+                android:textStyle="normal"
+                android:layout_centerVertical="true"
+                android:autoSizeTextType="uniform" />
 
-        <TextView
-            android:id="@+id/linea_ID"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="64dp"
-            android:visibility="invisible"
-            android:textSize="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="parent" />
+            <TextView
+                android:id="@+id/id_operador_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/codigo_linea"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="14dp"
+                android:autoSizeTextType="uniform"
+                android:text="Operador"
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:visibility="invisible"
+                android:textSize="10sp"/>
 
-        <TextView
-            android:id="@+id/id_operador_id"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="24dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="4dp"
-            android:text="Operador"
-            android:textSize="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/linea_ID"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/id_linea_nom" />
+            <TextView
+                android:id="@+id/linea_ID"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:visibility="invisible" />
 
-    </android.support.constraint.ConstraintLayout>
-
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
 </LinearLayout>

@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.animators.FlipInBottomXAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
+
 public class ListaActivityMunicipiosParadas extends Activity {
     private MiBaseDatos MDB;
     private Integer idConsorcio;
