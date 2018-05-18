@@ -68,28 +68,25 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((ViewHolder1) holder).texto_ID.setText(((ModoTrans)elementos.get(position)).getIdModo().toString());
 
                 String modo_transporte = ((ModoTrans)elementos.get(position)).getDesc();
-                if (modo_transporte.equals("Bus") || modo_transporte.equals("AUTOBÚS INTERURBANO") ||
-                        modo_transporte.equals("AUTOBUS") || modo_transporte.equals("Autobús")) {
+                if (modo_transporte.equals("Autobús")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_bus);
                 }
-                if (modo_transporte.equals("Metro") || modo_transporte.equals("METRO")) {
+                if (modo_transporte.equals("Metro")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_metro);
                 }
-                if (modo_transporte.equals("Tranvía") || modo_transporte.equals("METRO LIGERO") ||
-                        modo_transporte.equals("TRANVÍA")) {
+                if (modo_transporte.equals("Tranvía")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tranvia);
                 }
-                if (modo_transporte.equals("Tren") || modo_transporte.equals("CERCANÍAS") ||
-                        modo_transporte.equals("TREN CERCANÍAS")) {
+                if (modo_transporte.equals("Tren Cercanías")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tren_cercanias);
                 }
-                if (modo_transporte.equals("MEDIA DISTANCIA")) {
+                if (modo_transporte.equals("Tren Media Distancia")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tren_media_distancia);
                 }
                 if (modo_transporte.equals("Bicicleta")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_bicicleta);
                 }
-                if (modo_transporte.equals("BARCO")) {
+                if (modo_transporte.equals("Barco")) {
                     ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_barco);
                 }
                 if (modo_transporte.equals("Bus+Bici")) {

@@ -539,6 +539,29 @@ public class MiBaseDatos extends SQLiteOpenHelper {
                                 trans = array.getJSONObject(i);
                                 int id_modo = trans.getInt("idModo");
                                 String desc = trans.getString("descripcion");
+                                //Vamos a filtrar las id para normalizar los nombres entre
+                                //los distintos consorcios.
+                                if (desc.equals("Bus") || desc.equals("AUTOBÚS INTERURBANO") ||
+                                        desc.equals("AUTOBUS")) {
+                                    desc = "Autobús";
+                                }
+                                if (desc.equals("METRO")) {
+                                    desc = "Metro";
+                                }
+                                if (desc.equals("METRO LIGERO") || desc.equals("TRANVÍA")) {
+                                    desc = "Tranvía";
+                                }
+                                if (desc.equals("Tren") || desc.equals("CERCANÍAS") ||
+                                        desc.equals("TREN CERCANÍAS")) {
+                                    desc = "Tren Cercanías";
+                                }
+                                if (desc.equals("MEDIA DISTANCIA")) {
+                                    desc = "Tren Media Distancia";
+                                }
+                                if (desc.equals("BARCO")) {
+                                    desc = "Barco";
+                                }
+                                //////////////////////////////////////////////////////////
                                 if(id_modo !=0) {
                                     ContentValues valores = new ContentValues();
                                     valores.put(MODO_ID,id_modo);
