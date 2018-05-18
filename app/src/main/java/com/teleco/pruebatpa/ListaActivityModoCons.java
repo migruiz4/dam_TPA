@@ -15,11 +15,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 public class ListaActivityModoCons extends Activity {
     private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
     private LinearLayoutManager mLayoutManager;
+    private AdaptadorRecycler myAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +37,20 @@ public class ListaActivityModoCons extends Activity {
             lista.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
-            lista.setAdapter(new AdaptadorRecycler(lista_modos, R.layout.modo, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_modos, R.layout.modo, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     Integer modo = ((ModoTrans) item).getIdModo();
                     pasar_siguiente_actividad(modo);
                 }
-            }));
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
         }
         else
             Log.e("Lista", "consorcio no recibido");

@@ -15,11 +15,15 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 public class ListaActivityMunicipiosOrigen extends Activity {
     private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
     private LinearLayoutManager mLayoutManager;
+    private AdaptadorRecycler myAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +37,20 @@ public class ListaActivityMunicipiosOrigen extends Activity {
             lista.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
-            lista.setAdapter(new AdaptadorRecycler(lista_municipios, R.layout.municipio, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_municipios, R.layout.municipio, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     Integer idMun = ((Municipio)item).getIdMunicipio();
                     pasar_siguiente_actividad(idMun);
                 }
-            }));
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
         }
         else
             Log.e("Lista", "consorcio no recibido");

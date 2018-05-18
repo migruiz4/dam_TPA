@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -67,10 +68,36 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((ViewHolder1) holder).bind(elementos.get(position), listener);
                 ((ViewHolder1) holder).texto_modo.setText(((ModoTrans)elementos.get(position)).getDesc());
                 ((ViewHolder1) holder).texto_ID.setText(((ModoTrans)elementos.get(position)).getIdModo().toString());
+
+                String modo_transporte = ((ModoTrans)elementos.get(position)).getDesc();
+                if (modo_transporte.equals("Autobús")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_bus);
+                }
+                if (modo_transporte.equals("Metro")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_metro);
+                }
+                if (modo_transporte.equals("Tranvía")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tranvia);
+                }
+                if (modo_transporte.equals("Tren Cercanías")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tren_cercanias);
+                }
+                if (modo_transporte.equals("Tren Media Distancia")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_tren_media_distancia);
+                }
+                if (modo_transporte.equals("Bicicleta")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_bicicleta);
+                }
+                if (modo_transporte.equals("Barco")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_barco);
+                }
+                if (modo_transporte.equals("Bus+Bici")) {
+                    ((ViewHolder1) holder).foto_modo.setImageResource(R.drawable.icono_bus_bici);
+                }
                 break;
             case 2:
                 ((ViewHolder2) holder).bind(elementos.get(position), listener);
-                 ((ViewHolder2) holder).texto_municipio.setText(((Municipio)elementos.get(position)).getDatos());
+                ((ViewHolder2) holder).texto_municipio.setText(((Municipio)elementos.get(position)).getDatos());
                 ((ViewHolder2) holder).texto_ID.setText(((Municipio)elementos.get(position)).getIdMunicipio().toString());
                 break;
             case 3:
@@ -121,11 +148,13 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         public TextView texto_modo;
         public TextView texto_ID;
+        public ImageView foto_modo;
 
         public ViewHolder1(View itemView) {
             super(itemView);
             texto_modo = (TextView) itemView.findViewById(R.id.id_modo_desc);
             texto_ID = (TextView) itemView.findViewById(R.id.modo_ID);
+            foto_modo = (ImageView) itemView.findViewById(R.id.foto_modo);
         }
         public void bind(final Object item, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
