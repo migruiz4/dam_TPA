@@ -17,6 +17,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 public class ListaActivityLineasModo extends Activity implements DatePickerDialog.OnDateSetListener {
     private RecyclerView lista;
     private MiBaseDatos MDB;
@@ -24,6 +27,7 @@ public class ListaActivityLineasModo extends Activity implements DatePickerDialo
     private Integer idModo;
     private Integer idLinea;
     private LinearLayoutManager mLayoutManager;
+    private AdaptadorRecycler myAdapter;
 
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         pasar_siguiente_actividad(idLinea, year, month, dayOfMonth);
@@ -46,14 +50,20 @@ public class ListaActivityLineasModo extends Activity implements DatePickerDialo
             lista.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
-            lista.setAdapter(new AdaptadorRecycler(lista_lineas, R.layout.linea, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_lineas, R.layout.linea, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     idLinea = ((Linea) item).getIdLinea();
                     datePickerDialog.show();
                 }
-            }));
-
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
         }
         else
             Log.e("Lista", "consorcio no recibido");

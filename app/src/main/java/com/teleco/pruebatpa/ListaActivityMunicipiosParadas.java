@@ -17,16 +17,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 import jp.wasabeef.recyclerview.animators.FlipInBottomXAnimator;
 import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 public class ListaActivityMunicipiosParadas extends Activity {
     private MiBaseDatos MDB;
     private Integer idConsorcio;
-
-    ArrayList<Municipio> lista_municipios;
-    RecyclerView lista;
-    RecyclerView.LayoutManager mLayoutManager;
+    private ArrayList<Municipio> lista_municipios;
+    private RecyclerView lista;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private AdaptadorRecycler myAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,13 +43,20 @@ public class ListaActivityMunicipiosParadas extends Activity {
             lista.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
-            lista.setAdapter(new AdaptadorRecycler(lista_municipios, R.layout.municipio, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_municipios, R.layout.municipio, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     Integer idMun = ((Municipio)item).getIdMunicipio();
                     pasar_siguiente_actividad(idMun);
                 }
-            }));
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
 
         }
         else

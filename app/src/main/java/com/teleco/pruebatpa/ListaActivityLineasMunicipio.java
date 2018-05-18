@@ -26,6 +26,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 public class ListaActivityLineasMunicipio extends Activity{
     private RecyclerView lista;
     private MiBaseDatos MDB;
@@ -33,6 +36,7 @@ public class ListaActivityLineasMunicipio extends Activity{
     private Integer idMunicipio;
     private ArrayList<Linea> lista_lineas;
     private LinearLayoutManager mLayoutManager;
+    private AdaptadorRecycler myAdapter;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,14 +73,20 @@ public class ListaActivityLineasMunicipio extends Activity{
         lista.setHasFixedSize(true);
         mLayoutManager = new LinearLayoutManager(this);
         lista.setLayoutManager(mLayoutManager);
-        lista.setAdapter(new AdaptadorRecycler(lista_lineas, R.layout.municipio, new OnItemClickListener() {
+        myAdapter = new AdaptadorRecycler(lista_lineas, R.layout.municipio, new OnItemClickListener() {
             @Override
             public void onItemClick(Object item) {
                 Integer idMun = ((Municipio) item).getIdMunicipio();
                 pasar_siguiente_actividad(idMun);
             }
-        }));
-
+        });
+        ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+        scaleAdapter.setFirstOnly(false);
+        scaleAdapter.setDuration(80);
+        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+        alphaAdapter.setFirstOnly(false);
+        alphaAdapter.setDuration(50);
+        lista.setAdapter(alphaAdapter);
     }
 
     public void pideLineas(String idNucleo){
