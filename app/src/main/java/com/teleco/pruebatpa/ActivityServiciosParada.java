@@ -20,6 +20,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+
 public class ActivityServiciosParada extends Activity {
     private Integer idConsorcio;
     private Integer idMunicipio;
@@ -29,6 +32,7 @@ public class ActivityServiciosParada extends Activity {
     private Integer dia;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView lista;
+    private AdaptadorRecycler myAdapter;
     private ArrayList<Servicio> lista_servicios;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,12 +51,19 @@ public class ActivityServiciosParada extends Activity {
             lista.setHasFixedSize(true);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
-            lista.setAdapter(new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     //
                 }
-            }));
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
             consultaServicios(idConsorcio, idParada, anio, mes, dia, 6);
         }
         else
@@ -95,12 +106,19 @@ public class ActivityServiciosParada extends Activity {
                     respuesta_rest(response);
                     if(hora < 23) {
                         consultaServicios(idConsorcio, idParada, año, mes, dia, hora + 1);
-                        lista.setAdapter(new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
+                        myAdapter = new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
                             @Override
                             public void onItemClick(Object item) {
                                 //
                             }
-                        }));
+                        });
+                        ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+                        scaleAdapter.setFirstOnly(false);
+                        scaleAdapter.setDuration(80);
+                        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+                        alphaAdapter.setFirstOnly(false);
+                        alphaAdapter.setDuration(50);
+                        lista.setAdapter(alphaAdapter);
                     }
                 }
                 catch (JSONException e){
