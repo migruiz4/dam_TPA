@@ -17,6 +17,7 @@
         <activity android:name=".ListaActivityLineasMunicipio"/>
         <activity android:name=".ListaActivityParadas"/>
         <activity android:name=".ActivityServiciosParada"/>
+        <activity android:name=".MenuInfo" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

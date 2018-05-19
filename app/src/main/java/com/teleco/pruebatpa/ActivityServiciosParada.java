@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,10 +31,13 @@ public class ActivityServiciosParada extends Activity {
     private Integer anio;
     private Integer mes;
     private Integer dia;
+    private Integer hora;
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView lista;
     private AdaptadorRecycler myAdapter;
+    private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Servicio> lista_servicios;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
@@ -48,9 +52,10 @@ public class ActivityServiciosParada extends Activity {
 
         if(idConsorcio != 0 && idMunicipio != 0 && idParada != 0) {
             lista = (RecyclerView) findViewById(R.id.lista);
-            lista.setHasFixedSize(true);
+            lista.setHasFixedSize(false);
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
+
             myAdapter = new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
@@ -64,7 +69,21 @@ public class ActivityServiciosParada extends Activity {
             alphaAdapter.setFirstOnly(false);
             alphaAdapter.setDuration(50);
             lista.setAdapter(alphaAdapter);
-            consultaServicios(idConsorcio, idParada, anio, mes, dia, 6);
+            hora = 6;
+            consultaServicios(idConsorcio, idParada, anio, mes, dia, hora);
+
+            scrollListener = new EndlessRecyclerViewScrollListener((LinearLayoutManager) mLayoutManager) {
+                @Override
+                public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                    // Triggered only when new data needs to be appended to the list
+                    // Add whatever code is needed to append new items to the bottom of the list
+                    if (hora <= 23) {
+                        hora++;
+                        consultaServicios(idConsorcio, idParada, anio, mes, dia, hora);
+                    }
+                }
+            };
+            lista.addOnScrollListener(scrollListener);
         }
         else
             Log.e("Lista", "consorcio no recibido");
@@ -87,39 +106,23 @@ public class ActivityServiciosParada extends Activity {
                 if (id_linea != 0) {
                     Servicio serv = new Servicio(idParada, idMunicipio, idConsorcio, id_linea, hora, nombre, cod, sentido, destino, tipo);
                     lista_servicios.add(serv);
+                    lista.getAdapter().notifyItemInserted(lista_servicios.size());
                 }
             }
         }
         Log.d("HOLA", lista_servicios.toString());
-
     }
     public void consultaServicios(final Integer idConsorcio, final Integer idParada, final Integer año, final Integer mes, final Integer dia, final Integer hora) {
 
         final String URL = "http://api.ctan.es/v1/Consorcios/"+ idConsorcio.toString() +"/paradas/"+ idParada.toString() + "/servicios?horaIni=" +
                 String.format("%02d", dia) + "-" + String.format("%02d", mes) + "-" + año.toString()+ "+" + String.format("%02d", hora) + ":00" ;
-        Log.d("HOLA", URL);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
                     respuesta_rest(response);
-                    if(hora < 23) {
-                        consultaServicios(idConsorcio, idParada, año, mes, dia, hora + 1);
-                        myAdapter = new AdaptadorRecycler(lista_servicios, R.layout.servicio, new OnItemClickListener() {
-                            @Override
-                            public void onItemClick(Object item) {
-                                //
-                            }
-                        });
-                        ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
-                        scaleAdapter.setFirstOnly(false);
-                        scaleAdapter.setDuration(80);
-                        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
-                        alphaAdapter.setFirstOnly(false);
-                        alphaAdapter.setDuration(50);
-                        lista.setAdapter(alphaAdapter);
-                    }
+                    //lista.getAdapter().notifyDataSetChanged();
                 }
                 catch (JSONException e){
                     Log.d("BBDD", e.toString());

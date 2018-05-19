@@ -75,17 +75,17 @@ public class MainActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_principal_desplegable, menu);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_info) {
+            Intent intent = new Intent(this, MenuInfo.class);
+            startActivity(intent);
         }
-
         return super.onOptionsItemSelected(item);
     }
 

@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.dam.tpa.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_info"
         android:orderInCategory="100"
-        android:title="Ajustes"
+        android:title="@string/menu_info"
         app:showAsAction="never" />
 </menu>

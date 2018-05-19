@@ -6,6 +6,7 @@
     <string name="spinner_default">Seleccione un</string>
     <string name="parada_nom">Nombre</string>
     <string name="municipio_nom">Nombre</string>
+    <string name="menu_info">Info</string>
     <string-array name="spinner_menu1">
         <item>Seleccione un Consorcio</item>
     </string-array>
