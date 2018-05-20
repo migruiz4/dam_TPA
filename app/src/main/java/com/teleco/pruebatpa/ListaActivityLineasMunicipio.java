@@ -43,7 +43,7 @@ public class ListaActivityLineasMunicipio extends Activity implements DatePicker
     private AdaptadorRecycler myAdapter;
 
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        pasar_siguiente_actividad(idLinea, year, month, dayOfMonth);
+        pasar_siguiente_actividad(idLinea, year, month+1, dayOfMonth);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,8 +113,14 @@ public class ListaActivityLineasMunicipio extends Activity implements DatePicker
                 String cod = lineas.getString("codigo");
                 String nombre = lineas.getString("nombre");
                 String opera = lineas.getString("operadores");
+                Boolean repetido = false;
                 if (id_linea != 0) {
-                    lista_lineas.add(new Linea(id_linea,idConsorcio, cod, nombre, opera));
+                    for(int j = 0;j < lista_lineas.size(); j++) {
+                        if (lista_lineas.get(j).getIdLinea() == id_linea)
+                            repetido = true;
+                    }
+                    if(repetido == false)
+                        lista_lineas.add(new Linea(id_linea,idConsorcio, cod, nombre, opera));
                 }
             }
             lista.getAdapter().notifyDataSetChanged();

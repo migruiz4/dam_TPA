@@ -30,7 +30,7 @@ public class ListaActivityLineasModo extends Activity implements DatePickerDialo
     private AdaptadorRecycler myAdapter;
 
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        pasar_siguiente_actividad(idLinea, year, month, dayOfMonth);
+        pasar_siguiente_actividad(idLinea, year, month+1, dayOfMonth);
     }
 
     protected void onCreate(Bundle savedInstanceState) {

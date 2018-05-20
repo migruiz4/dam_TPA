@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignEnd="@+id/informacion_linea"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="50dp"
                 android:text="Observaciones"
                 android:textSize="20sp"
                 android:textStyle="bold" />

@@ -116,7 +116,7 @@ public class ActivityServiciosParada extends Activity {
 
         final String URL = "http://api.ctan.es/v1/Consorcios/"+ idConsorcio.toString() +"/paradas/"+ idParada.toString() + "/servicios?horaIni=" +
                 String.format("%02d", dia) + "-" + String.format("%02d", mes) + "-" + año.toString()+ "+" + String.format("%02d", hora) + ":00" ;
-
+        Log.d("Servicio", URL);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

@@ -46,7 +46,7 @@ public class ActivityHorariosLinea extends Activity {
         dia = esteIntent.getIntExtra("Dia", 0);
         lista_horarios = new ArrayList<InfoHorarioLinea>();
 
-        if(idConsorcio != 0 && idModo != 0 && idLinea != 0) {
+        if(idConsorcio != 0 && idLinea != 0) {
             lista = (RecyclerView) findViewById(R.id.lista);
             lista.setHasFixedSize(false);
             mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
@@ -212,7 +212,7 @@ public class ActivityHorariosLinea extends Activity {
     public void consultaHorarios(final Integer idConsorcio, final Integer idLinea, final Integer año, final Integer mes, final Integer dia) {
         final String URL = "http://api.ctan.es/v1/Consorcios/" +idConsorcio.toString() +"/horarios_lineas?dia="+ dia.toString()
                 +"&lang=ES&linea="+idLinea.toString()+"&mes=" + mes.toString();
-
+        Log.d("Horario", URL);
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,URL, null, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {

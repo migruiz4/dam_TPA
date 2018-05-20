@@ -31,7 +31,7 @@ public class ListaActivityParadas extends Activity implements DatePickerDialog.O
 
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        pasar_siguiente_actividad(idPar, year, month, dayOfMonth);
+        pasar_siguiente_actividad(idPar, year, month+1, dayOfMonth);
     }
 
     protected void onCreate(Bundle savedInstanceState) {
