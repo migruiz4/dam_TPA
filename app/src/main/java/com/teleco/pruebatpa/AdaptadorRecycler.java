@@ -117,7 +117,15 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 break;
             case 5:
                 ((ViewHolder5) holder).bind(elementos.get(position), listener);
-                ((ViewHolder5) holder).horarios_linea.setText(((Horario)elementos.get(position)).getBloquesIda().toString());
+                String info = "";
+                for (String s : ((InfoHorarioLinea)elementos.get(position)).getInformacion_linea()) {
+                    info += s + "\n";
+                }
+                ((ViewHolder5) holder).horarios_linea.setText(info);
+                ((ViewHolder5) holder).observaciones.setText(((InfoHorarioLinea)elementos.get(position)).getObservaciones());
+                String frecuencia = "Frecuencia: " + ((InfoHorarioLinea)elementos.get(position)).getFrecuencia();
+                ((ViewHolder5) holder).frecuencias.setText(frecuencia);
+                ((ViewHolder5) holder).tipo_de_horario.setText(((InfoHorarioLinea)elementos.get(position)).getTipo_horario());
                 break;
         }
     }
@@ -238,11 +246,16 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public static class ViewHolder5 extends RecyclerView.ViewHolder {
 
         public TextView horarios_linea;
+        public TextView tipo_de_horario;
+        public TextView observaciones;
+        public TextView frecuencias;
 
         public ViewHolder5(View itemView) {
             super(itemView);
             horarios_linea = (TextView) itemView.findViewById(R.id.informacion_linea);
-
+            tipo_de_horario = (TextView) itemView.findViewById(R.id.tipo_de_horario);
+            observaciones = (TextView) itemView.findViewById(R.id.observaciones);
+            frecuencias = (TextView) itemView.findViewById(R.id.frecuencias);
         }
         public void bind(final Object item, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {

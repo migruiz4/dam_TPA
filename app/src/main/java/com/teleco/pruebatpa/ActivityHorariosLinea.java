@@ -32,7 +32,7 @@ public class ActivityHorariosLinea extends Activity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView lista;
     private AdaptadorRecycler myAdapter;
-    private ArrayList<Horario> lista_horarios;
+    private ArrayList<InfoHorarioLinea> lista_horarios;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,12 +44,12 @@ public class ActivityHorariosLinea extends Activity {
         anio = esteIntent.getIntExtra("Año", 0);
         mes = esteIntent.getIntExtra("Mes", 0);
         dia = esteIntent.getIntExtra("Dia", 0);
-        lista_horarios = new ArrayList<Horario> ();
+        lista_horarios = new ArrayList<InfoHorarioLinea>();
 
         if(idConsorcio != 0 && idModo != 0 && idLinea != 0) {
             lista = (RecyclerView) findViewById(R.id.lista);
             lista.setHasFixedSize(false);
-            mLayoutManager = new LinearLayoutManager(this);
+            mLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL, false);
             lista.setLayoutManager(mLayoutManager);
 
             myAdapter = new AdaptadorRecycler(lista_horarios, R.layout.horarios_linea, new OnItemClickListener() {
@@ -87,41 +87,94 @@ public class ActivityHorariosLinea extends Activity {
                 JSONArray bloques_vuelta = planificador.getJSONArray("bloquesVuelta");
                 JSONArray horario_ida = planificador.getJSONArray("horarioIda");
                 JSONArray horario_vuelta = planificador.getJSONArray("horarioVuelta");
-                Horario horarioFinal = new Horario(idConsorcio,idModo, idLinea, dia, mes);
 
+                InfoHorarioLinea horario_linea_ida = new InfoHorarioLinea();
                 if (bloques_ida.length() > 0)
                 {    for (int j = 0; j < bloques_ida.length(); j++) {
                         bloque = bloques_ida.getJSONObject(j);
-                        if (bloque.getString("nombre").equals("Frecuencia") || bloque.getString("nombre").equals("Observaciones")) {
-                            //No lo añadimos
-                        } else
+                        if (bloque.getString("nombre").equals("Frecuencia")) {
+                            //No hacemos nada
+                        } else if (bloque.getString("nombre").equals("Observaciones")){
+                            //No hacemos nada
+                        } else {
                             nombre_ida.add(bloque.getString("nombre"));
+                        }
                     }
-                    horarioFinal.setBloquesIda(nombre_ida);
+                    horario_linea_ida.setTipo_horario("IDA");
+
+                    //HORARIOS
+                    if(horario_ida.length() > 0) {
+                        for (int j = 0; j < horario_ida.length(); j++) {
+                            horario = horario_ida.getJSONObject(j);
+                            JSONArray horasIda = horario.getJSONArray("horas");
+                            String observaciones = horario.getString("observaciones");
+                            String frecuencia = horario.getString("frecuencia");
+                            ArrayList<String> info = new ArrayList<String>();
+                            String[] horas_ida = new String[horasIda.length()];
+                            for(int k = 0; k < horasIda.length(); k++) {
+                                horas_ida[k] = horasIda.getString(k);
+                                info.add(nombre_ida.get(k) + " -> " + horas_ida[k]);
+                            }
+                            horario_linea_ida.setObservaciones(observaciones);
+                            horario_linea_ida.setFrecuencia(frecuencia);
+                            horario_linea_ida.setInformacion_linea(info);
+                            lista_horarios.add(horario_linea_ida);
+                        }
+                    }
+                    //////////
                 }
 
+                InfoHorarioLinea horario_linea_vuelta = new InfoHorarioLinea();
+                if (bloques_vuelta.length() > 0)
+                {    for (int j = 0; j < bloques_vuelta.length(); j++) {
+                    bloque = bloques_vuelta.getJSONObject(j);
+                    if (bloque.getString("nombre").equals("Frecuencia")) {
+                        //No hacemos nada
+                    } else if (bloque.getString("nombre").equals("Observaciones")){
+                        //No hacemos nada
+                    } else {
+                        nombre_vuelta.add(bloque.getString("nombre"));
+                    }
+                }
+                    horario_linea_vuelta.setTipo_horario("VUELTA");
+
+                    //HORARIOS
+                    if(horario_vuelta.length() > 0) {
+                        for (int j = 0; j < horario_vuelta.length(); j++) {
+                            horario = horario_vuelta.getJSONObject(j);
+                            JSONArray horasVuelta = horario.getJSONArray("horas");
+                            String observaciones = horario.getString("observaciones");
+                            String frecuencia = horario.getString("frecuencia");
+                            ArrayList<String> info = new ArrayList<String>();
+                            String[] horas_vuelta = new String[horasVuelta.length()];
+                            for(int k = 0; k < horasVuelta.length(); k++) {
+                                horas_vuelta[k] = horasVuelta.getString(k);
+                                info.add(nombre_ida.get(k) + " -> " + horas_vuelta[k]);
+                            }
+                            horario_linea_vuelta.setObservaciones(observaciones);
+                            horario_linea_vuelta.setFrecuencia(frecuencia);
+                            horario_linea_vuelta.setInformacion_linea(info);
+                            lista_horarios.add(horario_linea_vuelta);
+                        }
+                    }
+                    //////////
+                }
+                /*
                 if (bloques_vuelta.length() > 0)
                 {       for (int j = 0; j < bloques_vuelta.length(); j++) {
                         bloque = bloques_vuelta.getJSONObject(j);
-                        if (bloque.getString("nombre").equals("Frecuencia") || bloque.getString("nombre").equals("Observaciones")) {
-                            //No lo añadimos
-                        } else
+                        if (bloque.getString("nombre").equals("Frecuencia")) {
+                            //No hacemos nada
+                        } else if (bloque.getString("nombre").equals("Observaciones")){
+                            //No hacemos nada
+                        } else {
                             nombre_vuelta.add(bloque.getString("nombre"));
+                        }
                     }
-                    horarioFinal.setBloquesVuelta(nombre_vuelta);
+                    horario_linea.setInformacion_linea(nombre_vuelta);
+                    horario_linea.setTipo_horario("VUELTA");
                 }
 
-                if(horario_ida.length() > 0) {
-                    for (int j = 0; j < horario_ida.length(); j++) {
-                        horario = horario_ida.getJSONObject(j);
-                        JSONArray horasIda = horario.getJSONArray("horas");
-                        String[] horas_ida = new String[horasIda.length()];
-                        for(int k = 0; k < horasIda.length(); k++)
-                            horas_ida[k] = horasIda.getString(k);
-                        horariosIda.add(horas_ida);
-                    }
-                    horarioFinal.setHorasIda(horariosIda);
-                }
 
                 if(horario_vuelta.length() > 0) {
                     for (int j = 0; j < horario_vuelta.length(); j++) {
@@ -135,6 +188,7 @@ public class ActivityHorariosLinea extends Activity {
                     horarioFinal.setHorasVuelta(horariosVuelta);
                 }
                 lista_horarios.add(horarioFinal);
+                *//*
                 for (String msg : horarioFinal.getBloquesIda()){
                     Log.d("HORARIO_DEBUG",msg);
                 }
@@ -151,6 +205,7 @@ public class ActivityHorariosLinea extends Activity {
                         Log.d("HORARIO_DEBUG", m);
                     }
                 }
+                */
             }
         }
     }
@@ -164,6 +219,7 @@ public class ActivityHorariosLinea extends Activity {
             public void onResponse(JSONObject response) {
                 try {
                     respuesta_rest(response);
+                    lista.getAdapter().notifyDataSetChanged();
                 }
                 catch (JSONException e){
                     Log.d("Servicio", e.toString());
