@@ -1,6 +1,7 @@
 package com.teleco.pruebatpa;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ListActivity;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -24,24 +26,33 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.concurrent.Semaphore;
 
 import jp.wasabeef.recyclerview.adapters.AlphaInAnimationAdapter;
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
 
-public class ListaActivityLineasMunicipio extends Activity{
+public class ListaActivityLineasMunicipio extends Activity implements DatePickerDialog.OnDateSetListener{
     private RecyclerView lista;
     private MiBaseDatos MDB;
     private Integer idConsorcio;
     private Integer idMunicipio;
+    private Integer idLinea;
     private ArrayList<Linea> lista_lineas;
     private LinearLayoutManager mLayoutManager;
     private AdaptadorRecycler myAdapter;
 
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        pasar_siguiente_actividad(idLinea, year, month, dayOfMonth);
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista);
-        Intent esteIntent = getIntent();
+        Intent esteIntent = getIntent();Calendar newDate = Calendar.getInstance();
+        final DatePickerDialog datePickerDialog = new DatePickerDialog(
+                this, ListaActivityLineasMunicipio.this, newDate.get(Calendar.YEAR), newDate.get(Calendar.MONTH), newDate.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         idConsorcio = esteIntent.getIntExtra("idConsorcio", 0);
         idMunicipio = esteIntent.getIntExtra("idMunicipio", 0);
         if(idConsorcio != 0 && idMunicipio != 0) {
@@ -54,76 +65,83 @@ public class ListaActivityLineasMunicipio extends Activity{
                 pideLineas(i.getIdNucleo().toString());
 
             }
+
+            lista = (RecyclerView) findViewById(R.id.lista);
+            lista.setHasFixedSize(true);
+            mLayoutManager = new LinearLayoutManager(this);
+            lista.setLayoutManager(mLayoutManager);
+            myAdapter = new AdaptadorRecycler(lista_lineas, R.layout.linea, new OnItemClickListener() {
+                @Override
+                public void onItemClick(Object item) {
+                    idLinea = ((Linea) item).getIdLinea();
+                    datePickerDialog.show();
+                }
+            });
+            ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
+            scaleAdapter.setFirstOnly(false);
+            scaleAdapter.setDuration(80);
+            AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
+            alphaAdapter.setFirstOnly(false);
+            alphaAdapter.setDuration(50);
+            lista.setAdapter(alphaAdapter);
         }
         else
             Log.e("Lista", "consorcio no recibido");
     }
 
-    public void pasar_siguiente_actividad(Integer idMunicipio){
-        Intent intent = new Intent(this, ListActivity.class);
+    public void pasar_siguiente_actividad(Integer idLin, Integer anio, Integer mes, Integer dia){
+        Intent intent = new Intent(this, ActivityHorariosLinea.class);
         //finish();  //Descomentar para destruir esta actividad antes de comenzar la siguiente
         intent.putExtra("idMunicipio", idMunicipio);
         intent.putExtra("idConsorcio", idConsorcio);
+        intent.putExtra("idLinea", idLin);
+        intent.putExtra("Año", anio);
+        intent.putExtra("Mes", mes);
+        intent.putExtra("Dia", dia);
         startActivity(intent);
     }
 
-    public void respuesta_rest(){
+    public void respuesta_rest(JSONObject response) throws JSONException{
+        JSONArray array = response.getJSONArray("lineas");
+        JSONObject lineas = null;
 
-        lista = (RecyclerView) findViewById(R.id.lista);
-        lista.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
-        lista.setLayoutManager(mLayoutManager);
-        myAdapter = new AdaptadorRecycler(lista_lineas, R.layout.municipio, new OnItemClickListener() {
-            @Override
-            public void onItemClick(Object item) {
-                Integer idMun = ((Municipio) item).getIdMunicipio();
-                pasar_siguiente_actividad(idMun);
+        if (array.length() > 0) {
+            for (int i = 0; i < array.length(); i++) {
+                lineas = array.getJSONObject(i);
+                int id_linea = lineas.getInt("idLinea");
+                int id_modo = lineas.getInt("idModo");
+                String cod = lineas.getString("codigo");
+                String nombre = lineas.getString("nombre");
+                String opera = lineas.getString("operadores");
+                if (id_linea != 0) {
+                    lista_lineas.add(new Linea(id_linea,idConsorcio, cod, nombre, opera));
+                }
             }
-        });
-        ScaleInAnimationAdapter scaleAdapter = new ScaleInAnimationAdapter(myAdapter);
-        scaleAdapter.setFirstOnly(false);
-        scaleAdapter.setDuration(80);
-        AlphaInAnimationAdapter alphaAdapter = new AlphaInAnimationAdapter(scaleAdapter);
-        alphaAdapter.setFirstOnly(false);
-        alphaAdapter.setDuration(50);
-        lista.setAdapter(alphaAdapter);
+            lista.getAdapter().notifyDataSetChanged();
+        }
+
     }
 
-    public void pideLineas(String idNucleo){
+    public void pideLineas(final String idNucleo){
 
             final String URL = "http://api.ctan.es/v1/Consorcios/"+ idConsorcio.toString() +"/nucleos/"+ idNucleo + "/lineas";
             JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,URL, null, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
+                        respuesta_rest(response);
 
-                        JSONArray array = response.getJSONArray("lineas");
-                        JSONObject lineas = null;
-
-                        if (array.length() > 0) {
-                            for (int i = 0; i < array.length(); i++) {
-                                lineas = array.getJSONObject(i);
-                                int id_linea = lineas.getInt("idLinea");
-                                int id_modo = lineas.getInt("idModo");
-                                String cod = lineas.getString("codigo");
-                                String nombre = lineas.getString("nombre");
-                                String opera = lineas.getString("operadores");
-                                if (id_linea != 0) {
-                                    //lista_lineas.add(new Linea(id_linea,idConsorcio));
-                                }
-                            }
-                        }
                     }
                     catch (JSONException e){
-                        Log.d("BBDD", e.toString());
+                        Log.d("Lineas", e.toString());
                     }
                 }
             }, new Response.ErrorListener() {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Log.d("BBDD", error.toString());
-                    //rellenar_lineas(idConsorcio, sem);
+                    Log.d("Lineas", error.toString());
+                    pideLineas(idNucleo);
                 }
             });
             // add the request object to the queue to be executed

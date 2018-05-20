@@ -2,7 +2,7 @@
     <string name="app_name">PruebaTPA</string>
     <string name="boton1">Buscar por parada</string>
     <string name="boton2">Buscar por Modo</string>
-    <string name="boton3">Buscar por Origen/Destino</string>
+    <string name="boton3">Buscar Lineas por Municipio</string>
     <string name="spinner_default">Seleccione un</string>
     <string name="parada_nom">Nombre</string>
     <string name="municipio_nom">Nombre</string>
