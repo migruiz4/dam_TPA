@@ -125,15 +125,15 @@ public class ActivityServiciosParada extends Activity {
                     //lista.getAdapter().notifyDataSetChanged();
                 }
                 catch (JSONException e){
-                    Log.d("BBDD", e.toString());
+                    Log.d("Servicio", e.toString());
                 }
             }
         }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("BBDD", error.toString());
-                //rellenar_lineas(idConsorcio, sem);
+                Log.d("Servicio", error.toString());
+                consultaServicios(idConsorcio, idParada, anio, mes, dia, hora);
             }
         });
         // add the request object to the queue to be executed

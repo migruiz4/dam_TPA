@@ -70,7 +70,7 @@ public class ListaActivityLineasModo extends Activity implements DatePickerDialo
     }
 
     public void pasar_siguiente_actividad(Integer idLin, int anio, int mes, int dia){
-        Intent intent = new Intent(this, ListaActivityHorariosLineaModo.class);
+        Intent intent = new Intent(this, ActivityHorariosLinea.class);
         //finish();  //Descomentar para destruir esta actividad antes de comenzar la siguiente
         intent.putExtra("idModo", idModo);
         intent.putExtra("idConsorcio", idConsorcio);
