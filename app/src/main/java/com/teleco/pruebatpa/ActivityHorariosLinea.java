@@ -32,7 +32,6 @@ public class ActivityHorariosLinea extends Activity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RecyclerView lista;
     private AdaptadorRecycler myAdapter;
-    private EndlessRecyclerViewScrollListener scrollListener;
     private ArrayList<Horario> lista_horarios;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +52,7 @@ public class ActivityHorariosLinea extends Activity {
             mLayoutManager = new LinearLayoutManager(this);
             lista.setLayoutManager(mLayoutManager);
 
-            myAdapter = new AdaptadorRecycler(lista_horarios, R.layout.servicio, new OnItemClickListener() {
+            myAdapter = new AdaptadorRecycler(lista_horarios, R.layout.horarios_linea, new OnItemClickListener() {
                 @Override
                 public void onItemClick(Object item) {
                     //
@@ -98,7 +97,7 @@ public class ActivityHorariosLinea extends Activity {
                         } else
                             nombre_ida.add(bloque.getString("nombre"));
                     }
-                    horarioFinal.setNucleosIda(nombre_ida);
+                    horarioFinal.setBloquesIda(nombre_ida);
                 }
 
                 if (bloques_vuelta.length() > 0)
@@ -109,7 +108,7 @@ public class ActivityHorariosLinea extends Activity {
                         } else
                             nombre_vuelta.add(bloque.getString("nombre"));
                     }
-                    horarioFinal.setNucleosVuelta(nombre_vuelta);
+                    horarioFinal.setBloquesVuelta(nombre_vuelta);
                 }
 
                 if(horario_ida.length() > 0) {
@@ -135,7 +134,23 @@ public class ActivityHorariosLinea extends Activity {
                     }
                     horarioFinal.setHorasVuelta(horariosVuelta);
                 }
-
+                lista_horarios.add(horarioFinal);
+                for (String msg : horarioFinal.getBloquesIda()){
+                    Log.d("HORARIO_DEBUG",msg);
+                }
+                for (String msg : horarioFinal.getBloquesVuelta()){
+                    Log.d("HORARIO_DEBUG",msg);
+                }
+                for (String msg[] : horarioFinal.getHorasIda()){
+                    for (String m : msg) {
+                        Log.d("HORARIO_DEBUG", m);
+                    }
+                }
+                for (String msg[] : horarioFinal.getHorasVuelta()){
+                    for (String m : msg) {
+                        Log.d("HORARIO_DEBUG", m);
+                    }
+                }
             }
         }
     }
@@ -149,7 +164,6 @@ public class ActivityHorariosLinea extends Activity {
             public void onResponse(JSONObject response) {
                 try {
                     respuesta_rest(response);
-                    //lista.getAdapter().notifyDataSetChanged();
                 }
                 catch (JSONException e){
                     Log.d("Servicio", e.toString());

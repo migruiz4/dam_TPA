@@ -37,6 +37,7 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case R.layout.municipio: return 2;
             case R.layout.parada: return 3;
             case R.layout.servicio: return 4;
+            case R.layout.horarios_linea: return 5;
             default: return -1;
         }
     }
@@ -50,6 +51,7 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case 2: return new ViewHolder2(view);
             case 3: return new ViewHolder3(view);
             case 4: return new ViewHolder4(view);
+            case 5: return new ViewHolder5(view);
             default: return null;
         }
     }
@@ -112,6 +114,10 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 ((ViewHolder4) holder).texto_codigo.setText(((Servicio)elementos.get(position)).getCodigo());
                 ((ViewHolder4) holder).texto_destino.setText(((Servicio)elementos.get(position)).getDestino());
                 ((ViewHolder4) holder).texto_hora.setText(((Servicio)elementos.get(position)).getHora());
+                break;
+            case 5:
+                ((ViewHolder5) holder).bind(elementos.get(position), listener);
+                ((ViewHolder5) holder).horarios_linea.setText(((Horario)elementos.get(position)).getBloquesIda().toString());
                 break;
         }
     }
@@ -218,6 +224,24 @@ class AdaptadorRecycler extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             texto_codigo = (TextView) itemView.findViewById(R.id.codig_linea);
             texto_destino = (TextView) itemView.findViewById(R.id.destino);
             texto_hora = (TextView) itemView.findViewById(R.id.hora);
+
+        }
+        public void bind(final Object item, final OnItemClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onItemClick(item);
+                }
+            });
+        }
+    }
+
+    public static class ViewHolder5 extends RecyclerView.ViewHolder {
+
+        public TextView horarios_linea;
+
+        public ViewHolder5(View itemView) {
+            super(itemView);
+            horarios_linea = (TextView) itemView.findViewById(R.id.informacion_linea);
 
         }
         public void bind(final Object item, final OnItemClickListener listener) {

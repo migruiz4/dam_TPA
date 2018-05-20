@@ -8,8 +8,8 @@ public class Horario {
     private Integer idModo;
     private Integer dia;
     private Integer mes;
-    private ArrayList<String> nucleosIda;
-    private ArrayList<String> nucleosVuelta;
+    private ArrayList<String> bloquesIda;
+    private ArrayList<String> bloquesVuelta;
     private ArrayList<String[]> horasIda;
     private ArrayList<String[]> horasVuelta;
 
@@ -30,12 +30,12 @@ public class Horario {
         this.horasVuelta = horasVuelta;
     }
 
-    public void setNucleosIda(ArrayList<String> nucleosIda) {
-        this.nucleosIda = nucleosIda;
+    public void setBloquesIda(ArrayList<String> bloquesIda) {
+        this.bloquesIda = bloquesIda;
     }
 
-    public void setNucleosVuelta(ArrayList<String> nucleosVuelta) {
-        this.nucleosVuelta = nucleosVuelta;
+    public void setBloquesVuelta(ArrayList<String> bloquesVuelta) {
+        this.bloquesVuelta = bloquesVuelta;
     }
 
     public Integer getIdLinea() {
@@ -50,12 +50,12 @@ public class Horario {
         return idModo;
     }
 
-    public ArrayList<String> getNucleosIda() {
-        return nucleosIda;
+    public ArrayList<String> getBloquesIda() {
+        return bloquesIda;
     }
 
-    public ArrayList<String> getNucleosVuelta() {
-        return nucleosVuelta;
+    public ArrayList<String> getBloquesVuelta() {
+        return bloquesVuelta;
     }
 
     public ArrayList<String[]> getHorasIda() {
