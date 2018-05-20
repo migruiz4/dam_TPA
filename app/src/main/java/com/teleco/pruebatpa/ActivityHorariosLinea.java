@@ -88,7 +88,6 @@ public class ActivityHorariosLinea extends Activity {
                 JSONArray horario_ida = planificador.getJSONArray("horarioIda");
                 JSONArray horario_vuelta = planificador.getJSONArray("horarioVuelta");
 
-                InfoHorarioLinea horario_linea_ida = new InfoHorarioLinea();
                 if (bloques_ida.length() > 0)
                 {    for (int j = 0; j < bloques_ida.length(); j++) {
                         bloque = bloques_ida.getJSONObject(j);
@@ -100,7 +99,6 @@ public class ActivityHorariosLinea extends Activity {
                             nombre_ida.add(bloque.getString("nombre"));
                         }
                     }
-                    horario_linea_ida.setTipo_horario("IDA");
 
                     //HORARIOS
                     if(horario_ida.length() > 0) {
@@ -115,16 +113,17 @@ public class ActivityHorariosLinea extends Activity {
                                 horas_ida[k] = horasIda.getString(k);
                                 info.add(nombre_ida.get(k) + " -> " + horas_ida[k]);
                             }
+                            InfoHorarioLinea horario_linea_ida = new InfoHorarioLinea();
                             horario_linea_ida.setObservaciones(observaciones);
                             horario_linea_ida.setFrecuencia(frecuencia);
                             horario_linea_ida.setInformacion_linea(info);
+                            horario_linea_ida.setTipo_horario("IDA");
                             lista_horarios.add(horario_linea_ida);
                         }
                     }
                     //////////
                 }
 
-                InfoHorarioLinea horario_linea_vuelta = new InfoHorarioLinea();
                 if (bloques_vuelta.length() > 0)
                 {    for (int j = 0; j < bloques_vuelta.length(); j++) {
                     bloque = bloques_vuelta.getJSONObject(j);
@@ -136,8 +135,6 @@ public class ActivityHorariosLinea extends Activity {
                         nombre_vuelta.add(bloque.getString("nombre"));
                     }
                 }
-                    horario_linea_vuelta.setTipo_horario("VUELTA");
-
                     //HORARIOS
                     if(horario_vuelta.length() > 0) {
                         for (int j = 0; j < horario_vuelta.length(); j++) {
@@ -151,9 +148,11 @@ public class ActivityHorariosLinea extends Activity {
                                 horas_vuelta[k] = horasVuelta.getString(k);
                                 info.add(nombre_ida.get(k) + " -> " + horas_vuelta[k]);
                             }
+                            InfoHorarioLinea horario_linea_vuelta = new InfoHorarioLinea();
                             horario_linea_vuelta.setObservaciones(observaciones);
                             horario_linea_vuelta.setFrecuencia(frecuencia);
                             horario_linea_vuelta.setInformacion_linea(info);
+                            horario_linea_vuelta.setTipo_horario("VUELTA");
                             lista_horarios.add(horario_linea_vuelta);
                         }
                     }
